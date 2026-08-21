@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oráculo das Esculturas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #ede4d0;
+    --surface: #f9f3e6;
+    --surface-2: #e4d8bd;
+    --ink: #2b2118;
+    --ink-soft: #6b5c48;
+    --ink-faint: #9c8b71;
+    --accent: #9a6b23;
+    --accent-strong: #7a2727;
+    --accent-strong-ink: #fdf3ea;
+    --border: #cdbd97;
+    --border-soft: #ddd0ae;
+    --shadow: rgba(43, 33, 24, 0.14);
+    --good: #3f6b3f;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16130f;
+      --surface: #201b14;
+      --surface-2: #2b2419;
+      --ink: #ede2cd;
+      --ink-soft: #b8a988;
+      --ink-faint: #7d715a;
+      --accent: #d7a742;
+      --accent-strong: #d17a5a;
+      --accent-strong-ink: #201308;
+      --border: #3c3323;
+      --border-soft: #2c2519;
+      --shadow: rgba(0, 0, 0, 0.45);
+      --good: #7fb37f;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #16130f;
+    --surface: #201b14;
+    --surface-2: #2b2419;
+    --ink: #ede2cd;
+    --ink-soft: #b8a988;
+    --ink-faint: #7d715a;
+    --accent: #d7a742;
+    --accent-strong: #d17a5a;
+    --accent-strong-ink: #201308;
+    --border: #3c3323;
+    --border-soft: #2c2519;
+    --shadow: rgba(0, 0, 0, 0.45);
+    --good: #7fb37f;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.5;
+    padding: clamp(20px, 4vw, 56px);
+  }
+
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  header.hero {
+    text-align: center;
+    margin-bottom: clamp(28px, 5vw, 44px);
+  }
+
+  .eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: clamp(2rem, 4vw, 2.9rem);
+    margin: 0 0 12px;
+    text-wrap: balance;
+    letter-spacing: 0.01em;
+  }
+
+  header.hero p {
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin: 0 auto;
+    font-size: 1.02rem;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(18px, 3vw, 28px);
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: clamp(20px, 3vw, 28px);
+    box-shadow: 0 1px 2px var(--shadow);
+  }
+
+  .card + .card { margin-top: 18px; }
+
+  h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+
+  .goal-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  label.field-label {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.15rem;
+    font-variant-numeric: tabular-nums;
+    padding: 10px 12px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  input[type="number"]:focus-visible,
+  input[type="checkbox"]:focus-visible,
+  input[type="radio"]:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .events {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .event {
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .event.checked {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface-2));
+  }
+
+  .event-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+  }
+
+  .event-head input[type="checkbox"] {
+    margin-top: 3px;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--accent-strong);
+    flex-shrink: 0;
+  }
+
+  .event-name {
+    font-weight: 600;
+    font-size: 0.98rem;
+  }
+
+  .event-meta {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+
+  .event-sub {
+    display: flex;
+    gap: 16px;
+    margin: 10px 0 2px 27px;
+    font-size: 0.86rem;
+    color: var(--ink-faint);
+  }
+
+  .event.checked .event-sub { color: var(--ink-soft); }
+
+  .event-sub label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  .event-sub input[type="radio"] {
+    accent-color: var(--accent-strong);
+  }
+
+  .event-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0 2px 27px;
+    font-size: 0.86rem;
+    color: var(--ink-faint);
+  }
+
+  .event.checked .event-custom { color: var(--ink-soft); }
+
+  .event-custom input[type="number"] {
+    width: 64px;
+    font-size: 0.9rem;
+    padding: 5px 8px;
+  }
+
+  .result-hero {
+    text-align: center;
+    padding: 6px 4px 20px;
+  }
+
+  .result-hero .tag {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 10px;
+  }
+
+  .result-date {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+    color: var(--accent-strong);
+    text-wrap: balance;
+    margin: 0 0 8px;
+  }
+
+  .result-sub {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .stat {
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+
+  .stat .n {
+    font-family: 'Cinzel', serif;
+    font-size: 1.35rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  .stat .l {
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  th {
+    color: var(--ink-soft);
+    font-weight: 500;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td.num, th.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .table-wrap { overflow-x: auto; }
+
+  .empty-note {
+    color: var(--ink-faint);
+    font-size: 0.92rem;
+    text-align: center;
+    padding: 24px 10px;
+  }
+
+  .upcoming {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .upcoming li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.88rem;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .upcoming li:last-child { border-bottom: none; }
+
+  .upcoming .u-date {
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .upcoming .u-amt {
+    color: var(--accent-strong);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 0.8rem;
+    margin-top: 32px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <p class="eyebrow">Calculadora de progresso</p>
+    <h1>Oráculo das Esculturas</h1>
+    <p>Informe quantas esculturas você tem, sua meta e quais eventos você participa. O oráculo consulta o calendário do reino e revela a data em que sua coleção estará completa.</p>
+  </header>
+
+  <div class="layout">
+    <div>
+      <div class="card">
+        <h2>Sua coleção</h2>
+        <div class="goal-row">
+          <div>
+            <label class="field-label" for="atual">Esculturas atuais</label>
+            <input type="number" id="atual" min="0" step="1" placeholder="ex.: 40">
+          </div>
+          <div>
+            <label class="field-label" for="meta">Meta de esculturas</label>
+            <input type="number" id="meta" min="0" step="1" placeholder="ex.: 200">
+          </div>
+        </div>
+
+        <h2>Eventos que você participa</h2>
+        <div class="events" id="events"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" id="resultCard">
+        <h2>Profecia</h2>
+        <div id="resultBody"></div>
+      </div>
+
+      <div class="card" id="upcomingCard" style="display:none;">
+        <h2>Próximos eventos</h2>
+        <ul class="upcoming" id="upcomingList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <footer>A profecia recalcula automaticamente sempre que você muda a coleção ou os eventos selecionados.</footer>
+</div>
+
+<script>
+(function () {
+  // Datas de referência dos eventos (uso interno do cálculo — não exibidas na interface).
+  var EVENTS = [
+    {
+      id: 'olimpia', name: 'Olímpia', cadence: 'Todo fim de semana',
+      reward: '+2 esculturas / semana',
+      gen: function (today, horizon) { return weekly(today, horizon, 0, 2, 'Olímpia'); }
+    },
+    {
+      id: 'login', name: 'Login diário', cadence: 'Todo dia',
+      reward: '+3 esculturas / dia',
+      gen: function (today, horizon) { return daily(today, horizon, 3, 'Login diário'); }
+    },
+    {
+      id: 'arca', name: 'Arca de Osiris', cadence: 'Domingo sim, domingo não',
+      reward: null,
+      sub: { name: 'arcaMode', options: [
+        { value: 'solo', label: 'Solo (+5)', amount: 5 },
+        { value: 'alianca', label: 'Aliança (+10)', amount: 10 }
+      ], defaultValue: 'solo' },
+      gen: function (today, horizon, mode) {
+        var amount = mode === 'alianca' ? 10 : 5;
+        return periodic(today, horizon, new Date(2026, 7, 23), 14, amount, 'Arca de Osiris');
+      }
+    },
+    {
+      id: 'karuak', name: 'Karuak', cadence: 'A cada 45 dias',
+      reward: '+12 esculturas',
+      gen: function (today, horizon) {
+        var first = addDays(new Date(2026, 7, 16), 45);
+        return periodic(today, horizon, first, 45, 12, 'Karuak');
+      }
+    },
+    {
+      id: 'arvore', name: 'Árvore de 7K', cadence: 'A cada 4 meses',
+      reward: '+30 esculturas',
+      gen: function (today, horizon) { return monthly(today, horizon, new Date(2026, 7, 31), 4, 30, 'Árvore de 7K'); }
+    },
+    {
+      id: 'gemas', name: 'Mais que Gemas', cadence: 'Todo dia 29',
+      reward: null,
+      sub: { name: 'gemasMode', options: [
+        { value: 'meio', label: 'Meio evento (+10)', amount: 10 },
+        { value: 'inteiro', label: 'Evento inteiro (+26)', amount: 26 }
+      ], defaultValue: 'meio' },
+      gen: function (today, horizon, mode) {
+        var amount = mode === 'inteiro' ? 26 : 10;
+        return day29(today, horizon, amount, 'Mais que Gemas');
+      }
+    },
+    {
+      id: 'loja', name: 'Loja do KvK', cadence: 'Instantâneo',
+      reward: null,
+      custom: { id: 'lojaAmount', min: 0, max: 18, defaultValue: 8, label: 'Esculturas compradas (máx. 18)' },
+      gen: function (today, horizon, mode, customAmount) {
+        return [{ date: new Date(today), amount: customAmount, label: 'Loja do KvK' }];
+      }
+    },
+    {
+      id: 'fortaleza', name: 'Reconstrução da Fortaleza do Cruzado', cadence: 'A cada 120 dias',
+      reward: '+16 esculturas',
+      gen: function (today, horizon) {
+        var first = addDays(new Date(2026, 7, 19), 120);
+        return periodic(today, horizon, first, 120, 16, 'Fortaleza do Cruzado');
+      }
+    }
+  ];
+
+  function addDays(date, n) { var d = new Date(date); d.setDate(d.getDate() + n); return d; }
+
+  function startOfDay(d) { var x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+
+  function daily(today, horizon, amount, label) {
+    var list = [];
+    var d = new Date(today);
+    while (d <= horizon) { list.push({ date: new Date(d), amount: amount, label: label }); d.setDate(d.getDate() + 1); }
+    return list;
+  }
+
+  function weekly(today, horizon, dayOfWeek, amount, label) {
+    var list = [];
+    var d = new Date(today);
+    while (d.getDay() !== dayOfWeek) d.setDate(d.getDate() + 1);
+    while (d <= horizon) { list.push({ date: new Date(d), amount: amount, label: label }); d.setDate(d.getDate() + 7); }
+    return list;
+  }
+
+  function periodic(today, horizon, anchor, periodDays, amount, label) {
+    var list = [];
+    var d = new Date(anchor);
+    while (d < today) d.setDate(d.getDate() + periodDays);
+    while (d <= horizon) { list.push({ date: new Date(d), amount: amount, label: label }); d.setDate(d.getDate() + periodDays); }
+    return list;
+  }
+
+  function addMonthsClamped(date, months) {
+    var day = date.getDate();
+    var target = new Date(date.getFullYear(), date.getMonth() + months, 1);
+    var lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+    target.setDate(Math.min(day, lastDay));
+    return target;
+  }
+
+  function monthly(today, horizon, anchor, everyMonths, amount, label) {
+    var list = [];
+    var d = new Date(anchor);
+    while (d < today) d = addMonthsClamped(d, everyMonths);
+    while (d <= horizon) { list.push({ date: new Date(d), amount: amount, label: label }); d = addMonthsClamped(d, everyMonths); }
+    return list;
+  }
+
+  function day29(today, horizon, amount, label) {
+    var list = [];
+    var year = today.getFullYear(), month = today.getMonth();
+    if (today.getDate() > 29) { month++; if (month > 11) { month = 0; year++; } }
+    var guard = 0;
+    while (guard++ < 2000) {
+      var d = new Date(year, month, 29);
+      if (d.getMonth() === month) {
+        if (d > horizon) break;
+        if (d >= today) list.push({ date: d, amount: amount, label: label });
+      }
+      month++; if (month > 11) { month = 0; year++; }
+    }
+    return list;
+  }
+
+  function fmtDate(d) {
+    return d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function fmtDateShort(d) {
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  // Build event list UI
+  var eventsEl = document.getElementById('events');
+  EVENTS.forEach(function (ev) {
+    var wrap = document.createElement('div');
+    wrap.className = 'event';
+    wrap.id = 'event-' + ev.id;
+
+    var head = document.createElement('label');
+    head.className = 'event-head';
+    head.setAttribute('for', 'chk-' + ev.id);
+
+    var chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.id = 'chk-' + ev.id;
+
+    var textWrap = document.createElement('div');
+    var nameEl = document.createElement('div');
+    nameEl.className = 'event-name';
+    nameEl.textContent = ev.name;
+    var metaEl = document.createElement('div');
+    metaEl.className = 'event-meta';
+    metaEl.textContent = ev.cadence + (ev.reward ? ' · ' + ev.reward : '');
+
+    textWrap.appendChild(nameEl);
+    textWrap.appendChild(metaEl);
+    head.appendChild(chk);
+    head.appendChild(textWrap);
+    wrap.appendChild(head);
+
+    if (ev.sub) {
+      var subRow = document.createElement('div');
+      subRow.className = 'event-sub';
+      ev.sub.options.forEach(function (opt, i) {
+        var lbl = document.createElement('label');
+        var radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = ev.sub.name;
+        radio.value = opt.value;
+        radio.checked = opt.value === ev.sub.defaultValue;
+        radio.addEventListener('change', calculate);
+        lbl.appendChild(radio);
+        lbl.appendChild(document.createTextNode(opt.label));
+        subRow.appendChild(lbl);
+      });
+      wrap.appendChild(subRow);
+    }
+
+    if (ev.custom) {
+      var customRow = document.createElement('div');
+      customRow.className = 'event-custom';
+      var customLbl = document.createElement('label');
+      customLbl.setAttribute('for', 'custom-' + ev.custom.id);
+      customLbl.textContent = ev.custom.label;
+      var customInput = document.createElement('input');
+      customInput.type = 'number';
+      customInput.id = 'custom-' + ev.custom.id;
+      customInput.min = ev.custom.min;
+      customInput.max = ev.custom.max;
+      customInput.step = 1;
+      customInput.value = ev.custom.defaultValue;
+      customInput.addEventListener('input', function () {
+        var v = parseInt(customInput.value, 10);
+        if (!isNaN(v) && v > ev.custom.max) customInput.value = ev.custom.max;
+        calculate();
+      });
+      customRow.appendChild(customLbl);
+      customRow.appendChild(customInput);
+      wrap.appendChild(customRow);
+    }
+
+    chk.addEventListener('change', function () {
+      wrap.classList.toggle('checked', chk.checked);
+      calculate();
+    });
+
+    eventsEl.appendChild(wrap);
+  });
+
+  document.getElementById('atual').addEventListener('input', calculate);
+  document.getElementById('meta').addEventListener('input', calculate);
+
+  function getSubMode(name) {
+    var r = document.querySelector('input[name="' + name + '"]:checked');
+    return r ? r.value : null;
+  }
+
+  function calculate() {
+    var resultBody = document.getElementById('resultBody');
+    var upcomingCard = document.getElementById('upcomingCard');
+    var upcomingList = document.getElementById('upcomingList');
+
+    var atual = parseInt(document.getElementById('atual').value, 10);
+    var meta = parseInt(document.getElementById('meta').value, 10);
+
+    if (isNaN(atual) || isNaN(meta)) {
+      resultBody.innerHTML = '<p class="empty-note">Informe a quantidade atual e a meta de esculturas para consultar o oráculo.</p>';
+      upcomingCard.style.display = 'none';
+      return;
+    }
+
+    if (atual >= meta) {
+      resultBody.innerHTML = '<div class="result-hero"><p class="tag">Resultado</p><p class="result-date" style="color:var(--good)">Meta já alcançada!</p><p class="result-sub">Você já tem ' + atual + ' de ' + meta + ' esculturas.</p></div>';
+      upcomingCard.style.display = 'none';
+      return;
+    }
+
+    var selected = EVENTS.filter(function (ev) { return document.getElementById('chk-' + ev.id).checked; });
+
+    if (selected.length === 0) {
+      resultBody.innerHTML = '<p class="empty-note">Selecione ao menos um evento para o oráculo calcular sua data.</p>';
+      upcomingCard.style.display = 'none';
+      return;
+    }
+
+    var today = startOfDay(new Date());
+    var horizon = new Date(today); horizon.setFullYear(horizon.getFullYear() + 6);
+
+    var occurrences = [];
+    selected.forEach(function (ev) {
+      var mode = ev.sub ? getSubMode(ev.sub.name) : null;
+      var customAmount = null;
+      if (ev.custom) {
+        var raw = parseInt(document.getElementById('custom-' + ev.custom.id).value, 10);
+        if (isNaN(raw)) raw = ev.custom.defaultValue;
+        customAmount = Math.max(ev.custom.min, Math.min(ev.custom.max, raw));
+      }
+      occurrences = occurrences.concat(ev.gen(today, horizon, mode, customAmount));
+    });
+
+    occurrences.sort(function (a, b) { return a.date - b.date; });
+
+    var total = atual;
+    var hitIndex = -1;
+    var breakdown = {};
+
+    for (var i = 0; i < occurrences.length; i++) {
+      var o = occurrences[i];
+      total += o.amount;
+      breakdown[o.label] = breakdown[o.label] || { count: 0, sum: 0 };
+      breakdown[o.label].count++;
+      breakdown[o.label].sum += o.amount;
+      if (hitIndex === -1 && total >= meta) hitIndex = i;
+    }
+
+    if (hitIndex === -1) {
+      resultBody.innerHTML = '<p class="empty-note">Com os eventos selecionados, a meta não é alcançada dentro de 6 anos. Selecione mais eventos.</p>';
+      upcomingCard.style.display = 'none';
+      return;
+    }
+
+    var hitDate = occurrences[hitIndex].date;
+    var daysLeft = Math.round((startOfDay(hitDate) - today) / 86400000);
+    var weeksLeft = Math.floor(daysLeft / 7);
+    var remDays = daysLeft % 7;
+
+    var html = '';
+    html += '<div class="result-hero">';
+    html += '<p class="tag">Data estimada</p>';
+    html += '<p class="result-date">' + capitalize(fmtDate(hitDate)) + '</p>';
+    html += '<p class="result-sub">Faltam ' + daysLeft + ' dia' + (daysLeft === 1 ? '' : 's') + ' (' + weeksLeft + ' semana' + (weeksLeft === 1 ? '' : 's') + (remDays ? ' e ' + remDays + ' dia' + (remDays === 1 ? '' : 's') : '') + ')</p>';
+    html += '<div class="stat-row">';
+    html += '<div class="stat"><div class="n">' + atual + '</div><div class="l">Atual</div></div>';
+    html += '<div class="stat"><div class="n">' + meta + '</div><div class="l">Meta</div></div>';
+    html += '</div></div>';
+
+    html += '<div class="table-wrap"><table><thead><tr><th>Evento</th><th class="num">Vezes</th><th class="num">Total</th></tr></thead><tbody>';
+    var labels = Object.keys(breakdown).sort(function (a, b) { return breakdown[b].sum - breakdown[a].sum; });
+    labels.forEach(function (label) {
+      var b = breakdown[label];
+      html += '<tr><td>' + label + '</td><td class="num">' + b.count + '</td><td class="num">' + b.sum + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+
+    resultBody.innerHTML = html;
+
+    var upcoming = occurrences.slice(0, 6);
+    upcomingList.innerHTML = '';
+    upcoming.forEach(function (o) {
+      var li = document.createElement('li');
+      var d = document.createElement('span');
+      d.className = 'u-date';
+      d.textContent = fmtDateShort(o.date) + ' — ' + o.label;
+      var a = document.createElement('span');
+      a.className = 'u-amt';
+      a.textContent = '+' + o.amount;
+      li.appendChild(d);
+      li.appendChild(a);
+      upcomingList.appendChild(li);
+    });
+    upcomingCard.style.display = '';
+  }
+
+  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  calculate();
+})();
+</script>
+</body>
+</html>
